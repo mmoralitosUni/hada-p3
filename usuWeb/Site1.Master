@@ -1,0 +1,26 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="usuWeb.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>EADA P3 - CURS 2020/2021</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            MANUEL MORALES AMAT DNI 48789509T
+        </div>
+        <div style="text-align: center; background-color: aquamarine;">
+            <h1>EADA P3 - CURS 2020/2021</h1>
+        </div>
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
