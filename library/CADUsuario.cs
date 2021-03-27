@@ -103,10 +103,10 @@ namespace library
             {
                 sqlc.Open();
                 SqlCommand sc = new SqlCommand("", sqlc);
-                sc.CommandText = "select * from Usuarios where nombre==\"" + en.nombre + "\" and nif==\"" + en.nif + "\"and edad==" + en.edad + ";";
+                sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
                 SqlDataReader dr = sc.ExecuteReader();
                 if (dr["id"] != null) {
-                    // en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = dr["edad"];
+                    en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = dr["edad"];
                     ret = true;
                 }
                 sqlc.Close();
@@ -146,14 +146,14 @@ namespace library
             {
                 sqlc.Open();
                 SqlCommand sc = new SqlCommand("", sqlc);
-                sc.CommandText = "select * from Usuarios where nombre==\"" + en.nombre + "\" and nif==\"" + en.nif + "\"and edad==" + en.edad + ";";
+                sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
                 SqlDataReader dr = sc.ExecuteReader();
                 if (dr["id"]!=null)
                 {
                     int id = Convert.ToInt32(dr["id"].ToString());
                     if (dr.Read() == true) {
                         id += 1;
-                        sc.CommandText = "select * from Usuario where id==" + id;
+                        sc.CommandText = "select * from Usuario where id=" + id;
                         dr = sc.ExecuteReader();
                         en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = Convert.ToInt32(dr["edad"].ToString());
                         ret = true;
@@ -177,7 +177,7 @@ namespace library
             {
                 sqlc.Open();
                 SqlCommand sc = new SqlCommand("", sqlc);
-                sc.CommandText = "select * from Usuarios where nombre==\"" + en.nombre + "\" and nif==\"" + en.nif + "\"and edad==" + en.edad + ";";
+                sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
                 SqlDataReader dr = sc.ExecuteReader();
                 if (dr["id"] != null)
                 {
@@ -185,7 +185,7 @@ namespace library
                     if (id>0)
                     {
                         id -= 1;
-                        sc.CommandText = "select * from Usuario where id==" + id;
+                        sc.CommandText = "select * from Usuario where id=" + id;
                         dr = sc.ExecuteReader();
                         en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = Convert.ToInt32(dr["edad"].ToString());
                         ret = true;
