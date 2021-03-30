@@ -12,19 +12,23 @@ using System.Data.SqlTypes;
 
 namespace library
 {
-    class CADUsuario
+    public class CADUsuario
     {
-        private string constring = ConfigurationManager.ConnectionStrings["DefaultDB"].ToString();
-        SqlConnection sqlc;
+        private string constring;
+        internal SqlConnection sqlc;
         private int count(SqlConnection s, int i = -1) {
             try {
                 s.Open();
                 SqlCommand sc = new SqlCommand("select count(id) from Usuarios;", s);
                 SqlDataReader dr = sc.ExecuteReader();
                 i = dr.GetInt32(0);
-                s.Close();
             } catch (Exception e) {
                 error(s, e);
+                throw new Exception("Database doesn't contains data...");
+            }
+            finally
+            {
+                s.Close();
             }
             return i;
         }
@@ -37,14 +41,28 @@ namespace library
                 sc.CommandText = "select id from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
                 SqlDataReader dr = sc.ExecuteReader();
                 while (dr.Read()) { i = true; }
-                s.Close();
             }
             catch (Exception e)
             {
                 error(s, e);
+                throw new Exception("Couldn't find the specified user...");
+            }
+            finally
+            {
+                s.Close();
             }
             return i;
         }
+
+        /// <summary>
+        /// Funcion para actualizar los valores de las tablas
+        /// </summary>
+        /// <param name="s"> conexion sql </param>
+        /// <param name="table"> tabla objetivo </param>
+        /// <param name="en"> ENUsuario que representa al usuario </param>
+        /// <param name="i"> resultado de la opreacion </param>
+        /// <param name="opt"> opcion a hacer {insertar,  actualizar, borrar}</param>
+        /// <returns></returns>
         private bool updateTable(SqlConnection s, string table, ENUsuario en, bool i = false, short opt = 0) {
             try 
             {
@@ -52,25 +70,33 @@ namespace library
                 SqlCommand sc = new SqlCommand("",s);
                 switch (opt) {
                     case 0:
+                        // crea un usuario
                         sc.CommandText = "insert into Usuarios(nombre, nif, edad) values(\"" + en.nombre + "\",\"" + en.nif + "\"," + en.edad + ")";
                         break;
                     case 1:
+                        // cambia los valores de un usuario
                         sc.CommandText = "update Usuarios set nombre=" + en.nombre + ",nif=" + en.nif + ",edad=" + en.edad + " where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad="+en.edad + ";";
                         break;
                     case 2:
+                        // borra el usuario
                         sc.CommandText = "delete from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" +en.edad + ";"; 
                         break;
                     default:
+                        // si la lio, devuelve el usuario que se pasa por parametro
                         sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad="+en.edad + ";";
                         break;
                 }
                 sc.ExecuteNonQuery();
                 i = true;
-                s.Close();
             }
             catch(Exception e) 
             {
                 error(s, e);
+                throw new Exception("Couldn't finish the operations due to: " + e.Message);
+            }
+            finally
+            {
+                s.Close();
             }
             return i;
         }
@@ -80,55 +106,69 @@ namespace library
             return false;
         }
         public CADUsuario() {
-            sqlc = new SqlConnection(constring);
+           this.constring = ConfigurationManager.ConnectionStrings["DefaultDB"].ToString();
         }
-        public bool createUsuario(ENUsuario en) {
-            bool ret = false;
-            try{
-                int total = count(sqlc);
-                if ((total == -1) ^ (find(sqlc, en) == false))
-                {
-                    ret = updateTable(sqlc, "Usuarios", en);
-                }
-            }
-            catch(Exception e){
-                ret = error(sqlc, e);
-            }
-            return ret;
-        }
-        public bool readUsuario(ENUsuario en)
+        
+        public bool readUsuario(ENUsuario en) // leer usuario
         {
             bool ret = false;
+            SqlCommand sc;
+            SqlDataReader dr;
             try
             {
+                sqlc = new SqlConnection(constring);
                 sqlc.Open();
-                SqlCommand sc = new SqlCommand("", sqlc);
+
+                sc = new SqlCommand("", sqlc);
+
+                // comprueba si el usuario existe
+                sc.CommandText = "select count(*) from Usuarios where nif = " + en.nif;
+                dr = sc.ExecuteReader();
+                if (dr.GetInt32(0) <= 0) throw new Exception("User's nif or id not found!");
+                sc.CommandText = "select count(*) from Usuarios where nombre = " + en.nombre + "and nif = " + en.nif;
+                dr = sc.ExecuteReader();
+                if (dr.GetInt32(0) <= 0) throw new Exception("User's name not found!");
                 sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
-                SqlDataReader dr = sc.ExecuteReader();
-                if (dr["id"] != null) {
-                    en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = dr["edad"];
+                dr = sc.ExecuteReader();
+                if (dr.GetInt32(0) <= 0) throw new Exception("User not found!");
+                
+                // si el usuario existe, lo devuelves
+                sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
+                dr = sc.ExecuteReader();
+                if (dr["id"] != null)
+                {
+                    en = new ENUsuario( dr["nombre"].ToString(),dr["nif"].ToString(),Convert.ToInt32(dr["edad"].ToString()));
                     ret = true;
                 }
-                sqlc.Close();
+                
             }
             catch (Exception e)
             {
-               ret = error(sqlc, e);
+                ret = error(sqlc, e);
+                throw new Exception(e.Message);
+            }
+            finally {
+                sqlc.Close();
             }
             return ret;
         }
         public bool readFirstUsuario(ENUsuario en)
         {
             bool ret = false;
+            SqlCommand sc;
+            SqlDataReader dr;
             try
             {
+                sqlc = new SqlConnection(constring);
                 sqlc.Open();
-                SqlCommand sc = new SqlCommand("", sqlc);
-                sc.CommandText = "select * from Usuarios where id<>null and id == 0;";
-                SqlDataReader dr = sc.ExecuteReader();
+                int i = -1;
+                i = count(sqlc, i);
+                sc = new SqlCommand("", sqlc);
+                sc.CommandText = "select * from Usuarios where id == 0;";
+                dr = sc.ExecuteReader();
                 if (dr["id"] != null)
                 {
-                    en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = dr["edad"];
+                    en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
                     ret = true;
                 }
                 sqlc.Close();
@@ -136,37 +176,55 @@ namespace library
             catch (Exception e)
             {
                 ret = error(sqlc, e);
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                sqlc.Close();
             }
             return ret;
         }
         public bool readNextUsuario(ENUsuario en)
         {
             bool ret = false;
+            SqlCommand sc;
+            SqlDataReader dr;
             try
             {
+                sqlc = new SqlConnection(constring);
                 sqlc.Open();
-                SqlCommand sc = new SqlCommand("", sqlc);
+                sc = new SqlCommand("", sqlc);
                 sc.CommandText = "select * from Usuarios where nombre=\"" + en.nombre + "\" and nif=\"" + en.nif + "\"and edad=" + en.edad + ";";
-                SqlDataReader dr = sc.ExecuteReader();
-                if (dr["id"]!=null)
+                dr = sc.ExecuteReader();
+                if (dr["id"] != null)
                 {
                     int id = Convert.ToInt32(dr["id"].ToString());
-                    if (dr.Read() == true) {
+                    if (dr.Read() == true)
+                    {
                         id += 1;
                         sc.CommandText = "select * from Usuario where id=" + id;
                         dr = sc.ExecuteReader();
-                        en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = Convert.ToInt32(dr["edad"].ToString());
+                        en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
                         ret = true;
                     }
-                    else {
+                    else
+                    {
                         ret = false; // noo quedan usuarios
+                        sc.CommandText = "select * from Usuarios where id=0;";
+                        dr = sc.ExecuteReader();
+                        en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
+                        throw new Exception("No left users to read, showing first user...");
                     }
                 }
-                sqlc.Close();
             }
             catch (Exception e)
             {
                 ret = error(sqlc, e);
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                sqlc.Close();
             }
             return ret;
         }
@@ -182,24 +240,59 @@ namespace library
                 if (dr["id"] != null)
                 {
                     int id = Convert.ToInt32(dr["id"].ToString());
-                    if (id>0)
+                    if (id > 0)
                     {
                         id -= 1;
                         sc.CommandText = "select * from Usuario where id=" + id;
                         dr = sc.ExecuteReader();
-                        en.nombre = dr["nombre"]; en.nif = dr["nif"]; en.edad = Convert.ToInt32(dr["edad"].ToString());
+                        en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
                         ret = true;
                     }
                     else
                     {
-                        ret = false; // noo quedan usuarios
+                        ret = false;
+                        sc.CommandText = "select * from Usuarios where id=0;";
+                        dr = sc.ExecuteReader();
+                        en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
+                        throw new Exception("No left users to read, showing first user...");
                     }
                 }
-                sqlc.Close();
             }
             catch (Exception e)
             {
                 ret = error(sqlc, e);
+                throw new Exception(e.Message);
+            }
+            finally 
+            {
+                sqlc.Close();
+            }
+            return ret;
+        }
+
+        public bool createUsuario(ENUsuario en)
+        {
+            bool ret = false;
+            try
+            {
+                sqlc = new SqlConnection(constring);
+                try {
+                    int total = count(sqlc);
+                }catch(Exception e)
+                {
+                    try {
+                        bool finded = find(sqlc, en);
+                    }
+                    catch (Exception ex) {
+                        ret = updateTable(sqlc, "Usuarios", en);
+                    }
+                }
+                if (ret == false) throw new Exception("Couldn't create user...");
+            }
+            catch (Exception e)
+            {
+                ret = error(sqlc, e);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -218,6 +311,7 @@ namespace library
             catch (Exception e)
             {
                 ret = error(sqlc,e);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -236,6 +330,7 @@ namespace library
             catch (Exception e)
             {
                 ret = error(sqlc, e);
+                throw new Exception(e.Message);
             }
             return ret;
         }

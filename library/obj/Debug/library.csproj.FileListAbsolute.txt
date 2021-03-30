@@ -1,0 +1,6 @@
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\bin\Debug\library.dll
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\bin\Debug\library.pdb
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\obj\Debug\library.csprojAssemblyReference.cache
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\obj\Debug\library.csproj.CoreCompileInputs.cache
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\obj\Debug\library.dll
+C:\Users\amat_\Desktop\hada\hada-p3\hada-p3\library\obj\Debug\library.pdb

@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace library
 {
-    class ENUsuario
+    public class ENUsuario
     {
         internal string nifUsuario;
         internal string nombreUsuario;
         internal int edadUsuario;
         public string nif {
             get { return nifUsuario; }
-            private set { }
+            private set { nifUsuario = value; }
         }
         public string nombre {
             get { return nombreUsuario; }
-            private set { }
+            private set { nombreUsuario = value; }
         }
         public int edad {
             get { return edadUsuario; }
-            private set { }
+            private set { edadUsuario = value; }
         }
 
         public ENUsuario() {
@@ -41,7 +41,7 @@ namespace library
                 CADUsuario c = new CADUsuario();
                 ret = c.createUsuario(this);
             } catch (Exception e) {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -55,7 +55,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -69,7 +69,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -83,7 +83,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -97,7 +97,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -111,7 +111,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -125,7 +125,7 @@ namespace library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             return ret;
         }
@@ -138,9 +138,9 @@ namespace library
             public string GetMessage() {
                 return " -- Caused at "+msg+" because cannot be used as name since its a reserved word for SQL";
             }
-        }
+        } 
         private string sanetize(string str)
-        {
+        {/*
             string[] sql_code = { "\"", "\'", "DROP", "OR", "=", "TABLE", "ALTER", "INSERT", ";", "--" };    // completar
             foreach (string s in str.Split(' ')) {
                 for (short i = 0; i < sql_code.Length; i++) {
@@ -149,7 +149,7 @@ namespace library
                         throw new InvalidInputException(s);
                     }
                 }
-            }
+            }*/
             return str;
         }
     }

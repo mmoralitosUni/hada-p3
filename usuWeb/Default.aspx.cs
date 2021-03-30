@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using library;
 
 namespace usuWeb
 {
@@ -11,42 +12,124 @@ namespace usuWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            Messages.Visible = false;
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
+        private void send_msg(Exception msg) {
+            Messages.Text = msg.Message;
+            if (Messages.Visible == false) Messages.Visible = true;
+        }
+        private void send_msg(ENUsuario en)
         {
-
+            Messages.Text = "Mission acomplished";
+            if (Messages.Visible == false) Messages.Visible = true;
+            nifTB.Text = en.nif;
+            nombreTB.Text = en.nombre;
+            edadTB.Text = en.edad.ToString();
         }
 
-        protected void Button2_Click(object sender, EventArgs e)
+        protected void ButtonLeer_Click(object sender, EventArgs e) // leer usuario
         {
-
+            try {
+                
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.readUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex) {
+                send_msg(ex);
+            }
         }
 
-        protected void Button3_Click(object sender, EventArgs e)
+        protected void ButtonLeerPrimero_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.readFirstUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
         }
 
-        protected void Button4_Click(object sender, EventArgs e)
+        protected void ButtonLeerAnterior_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.readPrevUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
         }
 
-        protected void Button5_Click(object sender, EventArgs e)
+        protected void ButtonLeerSiguiente_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.readNextUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
         }
 
-        protected void Button6_Click(object sender, EventArgs e)
+        protected void ButtonCrear_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.createUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
+            
         }
 
-        protected void Button7_Click(object sender, EventArgs e)
+        protected void ButtonActualizar_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.updateUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
+        }
+
+        protected void ButtonBorrar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                u.deleteUsuario();
+                send_msg(u);
+            }
+            catch (Exception ex)
+            {
+                send_msg(ex);
+            }
         }
     }
 }
