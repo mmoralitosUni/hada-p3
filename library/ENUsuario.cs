@@ -50,8 +50,10 @@ namespace library
             bool ret = false;
             try
             {
+                ENUsuario en = new ENUsuario();
                 CADUsuario c = new CADUsuario();
-                ret = c.readUsuario(this);
+                ret = c.readUsuario(ref en);
+                copy(en);
             }
             catch (Exception e)
             {
@@ -64,8 +66,10 @@ namespace library
             bool ret = false;
             try
             {
+                ENUsuario en = new ENUsuario();
                 CADUsuario c = new CADUsuario();
-                ret = c.readFirstUsuario(this);
+                ret = c.readFirstUsuario(ref en);
+                copy(en);
             }
             catch (Exception e)
             {
@@ -78,8 +82,10 @@ namespace library
             bool ret = false;
             try
             {
+                ENUsuario en = new ENUsuario();
                 CADUsuario c = new CADUsuario();
-                ret = c.readNextUsuario(this);
+                ret = c.readNextUsuario(ref en);
+                copy(en);
             }
             catch (Exception e)
             {
@@ -92,8 +98,10 @@ namespace library
             bool ret = false;
             try
             {
+                ENUsuario en = new ENUsuario();
                 CADUsuario c = new CADUsuario();
-                ret = c.readPrevUsuario(this);
+                ret = c.readPrevUsuario(ref en);
+                copy(en);
             }
             catch (Exception e)
             {
@@ -129,7 +137,13 @@ namespace library
             }
             return ret;
         }
-        public class InvalidInputException : Exception {
+
+        private void copy(ENUsuario en) {
+            this.nif = en.nif;
+            this.nombre = en.nombre;
+            this.edad = en.edad;
+        }
+        private class InvalidInputException : Exception {
             internal string msg { get; private set; }
             public InvalidInputException() {}
             public InvalidInputException(string s) {

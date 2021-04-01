@@ -21,18 +21,27 @@ namespace usuWeb
         }
         private void send_msg(ENUsuario en)
         {
-            Messages.Text = "Mission acomplished";
+            Messages.Text = "Mission acomplished!<br/>Name: "+en.nombre+"<br>Nif: "+en.nif+"<br/>Edad: "+en.edad+"<br/>";
             if (Messages.Visible == false) Messages.Visible = true;
             nifTB.Text = en.nif;
             nombreTB.Text = en.nombre;
             edadTB.Text = en.edad.ToString();
         }
 
+        private ENUsuario createUsuario() {
+            if (nifTB.Text == "") throw new Exception("No has introducido el nif...");
+            if (nombreTB.Text == "") throw new Exception("No has introducido el nombre...");
+            if (edadTB.Text == "") throw new Exception("No has introducido la edad...");
+            int ueadad = 0;
+            if (int.TryParse(edadTB.Text, out ueadad) == false) throw new Exception("La edad tiene que ser un número...");
+            return new ENUsuario(nombreTB.Text, nifTB.Text, ueadad);
+        }
+
         protected void ButtonLeer_Click(object sender, EventArgs e) // leer usuario
         {
             try {
-                
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                if (nifTB.Text == "") throw new Exception("No has introducido el nif...");
+                ENUsuario u = new ENUsuario(nifTB.Text,"",0); ;
                 u.readUsuario();
                 send_msg(u);
             }
@@ -46,7 +55,7 @@ namespace usuWeb
             try
             {
 
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = new ENUsuario(); // esto lo tienes que hacer siempre
                 u.readFirstUsuario();
                 send_msg(u);
             }
@@ -61,7 +70,7 @@ namespace usuWeb
             try
             {
 
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = createUsuario(); // esto lo tienes que hacer siempre
                 u.readPrevUsuario();
                 send_msg(u);
             }
@@ -75,8 +84,7 @@ namespace usuWeb
         {
             try
             {
-
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = createUsuario(); // esto lo tienes que hacer siempre
                 u.readNextUsuario();
                 send_msg(u);
             }
@@ -91,7 +99,7 @@ namespace usuWeb
             try
             {
 
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = createUsuario(); // esto lo tienes que hacer siempre
                 u.createUsuario();
                 send_msg(u);
             }
@@ -106,8 +114,7 @@ namespace usuWeb
         {
             try
             {
-
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = createUsuario(); // esto lo tienes que hacer siempre
                 u.updateUsuario();
                 send_msg(u);
             }
@@ -121,8 +128,7 @@ namespace usuWeb
         {
             try
             {
-
-                ENUsuario u = new ENUsuario(nombreTB.Text, nifTB.Text, Convert.ToInt32(edadTB.Text)); // esto lo tienes que hacer siempre
+                ENUsuario u = createUsuario(); // esto lo tienes que hacer siempre
                 u.deleteUsuario();
                 send_msg(u);
             }

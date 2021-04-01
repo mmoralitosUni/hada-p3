@@ -9,8 +9,8 @@
     </script>
     <style>
         .button {
-            margin-left:3%;
-            margin-right:3%;
+            margin-left:0.5%;
+            margin-right:0.5%;
         }
     </style>
     <h1 style="margin-bottom: 2%;">Página de usuarios</h1>
@@ -20,7 +20,7 @@
         Nombre:  <asp:TextBox ID="nombreTB" runat="server" Width="30%" BorderStyle="Solid" BorderWidth ="1" BorderColor="Gray"></asp:TextBox></p>
     <p>
         Edad:  <asp:TextBox ID="edadTB" runat="server" Width="10%" BorderStyle="Solid" BorderWidth ="1" BorderColor="Gray"></asp:TextBox></p>
-    <div style="display:flex; justify-content:space-between;">
+    <div style="display:flex; justify-content:flex-start;">
         <asp:Button ID="ButtonLeer" CssClass="button" runat="server" Text="Leer" OnClick="ButtonLeer_Click" /> 
         <asp:Button ID="ButtonLeerPrimero" CssClass="button" runat="server" Text="Leer Primero" OnClick="ButtonLeerPrimero_Click" />
         <asp:Button ID="ButtonLeerAnterior" CssClass="button" runat="server" Text="Leer Anterior" OnClick="ButtonLeerAnterior_Click" />
