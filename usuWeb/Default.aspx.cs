@@ -34,6 +34,7 @@ namespace usuWeb
             if (edadTB.Text == "") throw new Exception("No has introducido la edad...");
             int ueadad = 0;
             if (int.TryParse(edadTB.Text, out ueadad) == false) throw new Exception("La edad tiene que ser un número...");
+            if (ueadad <= 0) throw new Exception("La edad tiene que ser mayor que 0...");
             return new ENUsuario(nombreTB.Text, nifTB.Text, ueadad);
         }
 
@@ -41,7 +42,7 @@ namespace usuWeb
         {
             try {
                 if (nifTB.Text == "") throw new Exception("No has introducido el nif...");
-                ENUsuario u = new ENUsuario(nifTB.Text,"",0); ;
+                ENUsuario u = new ENUsuario("",nifTB.Text,0); ;
                 u.readUsuario();
                 send_msg(u);
             }

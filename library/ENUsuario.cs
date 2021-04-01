@@ -50,7 +50,7 @@ namespace library
             bool ret = false;
             try
             {
-                ENUsuario en = new ENUsuario();
+                ENUsuario en = new ENUsuario("",this.nif,0);
                 CADUsuario c = new CADUsuario();
                 ret = c.readUsuario(ref en);
                 copy(en);
@@ -82,7 +82,7 @@ namespace library
             bool ret = false;
             try
             {
-                ENUsuario en = new ENUsuario();
+                ENUsuario en = new ENUsuario("",this.nif,0);
                 CADUsuario c = new CADUsuario();
                 ret = c.readNextUsuario(ref en);
                 copy(en);
