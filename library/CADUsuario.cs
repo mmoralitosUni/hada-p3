@@ -210,7 +210,7 @@ namespace library
                 {
                     int id = Convert.ToInt32(dr["id"].ToString());
                     dr.Close();
-                    sc.CommandText = "select (select * from Usuario un where un.id > u.id order by id asc limit 1) from Usuario u where u.id=" + id; // next
+                    sc.CommandText = "select * from Usuarios where id >= "+id+" order by id asc offset 1 rows"; // next
                     dr = sc.ExecuteReader();
                     dr.Read();
                     en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
@@ -256,8 +256,9 @@ namespace library
                     if (id > 0)
                     {
                         dr.Close();
-                        sc.CommandText = "select (select * from Usuario un where un.id > u.id order by id limit 1) from Usuario u where u.id=" + id; // previous
+                        sc.CommandText = "select * from Usuarios where id <= "+id+" order by id desc offset 1 rows;"; // previous
                         dr = sc.ExecuteReader();
+                        dr.Read();
                         en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
                         ret = true;
                     }
@@ -266,6 +267,7 @@ namespace library
                         ret = false;
                         sc.CommandText = "select top 1* from Usuarios;";
                         dr = sc.ExecuteReader();
+                        dr.Read();
                         en = new ENUsuario(dr["nombre"].ToString(), dr["nif"].ToString(), Convert.ToInt32(dr["edad"].ToString()));
                         throw new Exception("No left users to read, showing first user...");
                     }

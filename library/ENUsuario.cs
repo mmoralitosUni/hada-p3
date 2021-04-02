@@ -98,7 +98,7 @@ namespace library
             bool ret = false;
             try
             {
-                ENUsuario en = new ENUsuario();
+                ENUsuario en = new ENUsuario("",this.nif,0);
                 CADUsuario c = new CADUsuario();
                 ret = c.readPrevUsuario(ref en);
                 copy(en);
